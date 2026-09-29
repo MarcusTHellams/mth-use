@@ -1,0 +1,8 @@
+{
+  "oxc.requireConfig": true,
+  "oxc.enable.oxlint": true,
+  "oxc.enable": true,
+  "oxc.enable.oxfmt": true,
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.formatOnSave": true
+}
