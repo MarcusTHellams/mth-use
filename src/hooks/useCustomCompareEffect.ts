@@ -1,27 +1,11 @@
-import {
-	useEffect,
-	useLayoutEffect,
-	useRef,
-	type DependencyList,
-	type EffectCallback,
-} from 'react';
-import { useUpdate } from './useUpdate';
+import { useEffect, type DependencyList, type EffectCallback } from 'react';
+import { useCustomCompareDeps } from './useCustomCompareDeps';
 
 export function useCustomCompareEffect<const T extends DependencyList>(
 	effect: EffectCallback,
 	deps: T,
-	depsEqual: (updated: T, curr: T) => boolean,
+	isEqual: (next: T, prev: T) => boolean,
 ) {
-	const ref = useRef(deps);
-	const forceUpdate = useUpdate();
-
-	useLayoutEffect(() => {
-		if (!depsEqual(deps, ref.current)) {
-			ref.current = deps;
-			forceUpdate();
-		}
-	});
-
-	// oxlint-disable-next-line react/refs react-hooks/exhaustive-deps
-	useEffect(effect, ref.current);
+	// oxlint-disable-next-line react-hooks/exhaustive-deps
+	useEffect(effect, useCustomCompareDeps(deps, isEqual));
 }

@@ -1,5 +1,9 @@
-import { useEffect, useState } from 'react';
-import { useCustomCompareDeps } from '../../src';
+import { useState } from 'react';
+import {
+	useCustomCompareEffect,
+	useEventListener,
+	useUpdateEffect,
+} from '../../src';
 
 export function App() {
 	const [showTestComponent, setShowTestComponent] = useState(true);
@@ -18,31 +22,41 @@ export function App() {
 function TestComponent() {
 	const [count, setCount] = useState(0);
 
-	// useUpdateEffect(
-	// 	() => {
-	// 		console.log('count1: ', count);
-	// 	},
-	// 	[count],
-	// 	import.meta.env.DEV,
-	// );
+	useUpdateEffect(
+		() => {
+			console.log('count1: ', count);
+		},
+		[count],
+		import.meta.env.DEV,
+	);
 
-	useEffect(
+	useCustomCompareEffect(
 		() => {
 			console.log('count: ', count);
 		},
-		// oxlint-disable-next-line react-hooks/exhaustive-deps
-		useCustomCompareDeps([count], ([updatedCount]) => {
-			return updatedCount % 2 !== 0;
-		}),
+		[count],
+		([next]) => {
+			return next % 2 === 0;
+		},
 	);
 
-	// useEventListener({
-	// 	event: 'click',
-	// 	callback: (event) => {
-	// 		console.log('event: ', event);
+	// useEffect(
+	// 	() => {
+	// 		console.log('count: ', count);
 	// 	},
-	// 	isStrictMode: import.meta.env.DEV,
-	// });
+	// 	// oxlint-disable-next-line react-hooks/exhaustive-deps
+	// 	useCustomCompareDeps([count], ([updatedCount]) => {
+	// 		return updatedCount % 2 !== 0;
+	// 	}),
+	// );
+
+	useEventListener({
+		event: 'click',
+		callback: (event) => {
+			console.log('event: ', event);
+		},
+		isStrictMode: import.meta.env.DEV,
+	});
 
 	return (
 		<>

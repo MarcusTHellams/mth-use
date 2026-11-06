@@ -2,7 +2,7 @@ import { useState, type DependencyList } from 'react';
 
 export function useCustomCompareDeps<const T extends DependencyList>(
 	deps: T,
-	isEqual: (updated: T, curr: T) => boolean,
+	isEqual: (next: T, prev: T) => boolean,
 ) {
 	const [currDeps, setCurrDeps] = useState(deps);
 
@@ -13,12 +13,9 @@ export function useCustomCompareDeps<const T extends DependencyList>(
 	return currDeps;
 }
 
-function areDependenciesIdentical(
-	updated: DependencyList,
-	current: DependencyList,
-) {
+function areDependenciesIdentical(next: DependencyList, prev: DependencyList) {
 	return (
-		updated.length === current.length &&
-		updated.every((value, index) => Object.is(value, current[index]))
+		next.length === prev.length &&
+		next.every((value, index) => Object.is(value, prev[index]))
 	);
 }
